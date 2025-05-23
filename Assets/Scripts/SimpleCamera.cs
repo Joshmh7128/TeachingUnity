@@ -5,8 +5,9 @@ using UnityEngine;
 public class SimpleCamera : MonoBehaviour
 {
 
-    [SerializeField] float movespeed;
+    [SerializeField] float lerpspeed, movespeed;
     [SerializeField] Camera cam;
+    Vector2 targetpos;
 
     // Update is called once per frame
     void Update()
@@ -21,12 +22,13 @@ public class SimpleCamera : MonoBehaviour
 
         Vector2 input = new Vector2(hax, vax);
 
-        transform.position = Vector2.Lerp(transform.position, (Vector2)transform.position + input, movespeed * Time.deltaTime);
+        targetpos = Vector2.Lerp(targetpos, (Vector2)targetpos + (input * movespeed), lerpspeed * Time.deltaTime);
+        transform.position = Vector2.Lerp(transform.position, targetpos, lerpspeed * Time.deltaTime);
         transform.position = new Vector3(transform.position.x, transform.position.y, -20);
 
         if (Input.GetKey(KeyCode.Minus))
-            cam.orthographicSize += 1;
-        if (Input.GetKey(KeyCode.Plus))
-            cam.orthographicSize -= 1;
+            cam.orthographicSize += 0.5f;
+        if (Input.GetKey(KeyCode.Equals))
+            cam.orthographicSize -= 0.5f;
     }
 }
