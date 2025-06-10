@@ -9,12 +9,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float moveSpeed; // how fast do we move?
     [SerializeField] float jumpPower; // how high do we jump?
     [SerializeField] bool grounded; // are we grounded?
+    public string lastArea; // last area
 
     // Start is called before the first frame update
     void Start()
     {
         // get our player's rigidbody
         playerBody = GetComponent<Rigidbody2D>();
+
+        GameObject.FindObjectOfType<TelemetryHandler>().startTime = System.DateTime.Now;
     }
 
     /// <summary>
@@ -55,12 +58,16 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void ProcessJump()
     {
+
         Vector2 dif = new Vector2(0, 0.7f);
         // check if we are on the ground or not
         grounded = Physics2D.Raycast(playerBody.position - dif, Vector2.down, 0.1f);
 
         if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        {
+            GameObject.FindObjectOfType<TelemetryHandler>().jumps += 1;
             playerBody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        }
     }
 
     /// <summary>
